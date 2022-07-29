@@ -149,6 +149,8 @@ function App() {
       ) : (
         <TextInput
           autoFocus
+          placeholder="clique aqui e use as setas do teclado"
+          style={styles.input}
           onKeyPress={(keyValue) => {
             switch (keyValue.code) {
               case "ArrowUp": engine.current.dispatch("move-up")
@@ -209,6 +211,13 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
+  },
+  input: {
+    height: 40,
+    width: 250,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });
 

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { GameEngine } from "react-native-game-engine";
 import Constants from "./Constants";
 import Head from "./components/Head";
@@ -13,7 +13,7 @@ import Keyboard from "react-native-bootstrap-icons/icons/keyboard";
 
 function App() {
   const [isGameRunning, setIsGameRunning] = useState(true);
-  const [controlType, setControlType] = useState("");
+  const [controlType, setControlType] = useState(Platform.OS === 'android' ? 'click' : (Platform.OS === 'android' ? 'click' : ''));
 
   const randomPositions = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -51,7 +51,7 @@ function App() {
       },
     });
     setIsGameRunning(true);
-    setControlType("");
+    setControlType(Platform.OS === 'android' ? 'click' : (Platform.OS === 'android' ? 'click' : ''));
   };
 
   return (

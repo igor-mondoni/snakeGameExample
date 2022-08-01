@@ -149,17 +149,19 @@ function App() {
         <TextInput
           autoFocus
           placeholder="clique aqui e use as setas do teclado"
+          value=""
           style={styles.input}
           onKeyPress={(keyValue) => {
             switch (keyValue.code) {
-              case "ArrowUp": engine.current.dispatch("move-up")
+              case "ArrowUp": case "KeyW": engine.current.dispatch("move-up")
                 break;
-              case "ArrowDown": engine.current.dispatch("move-down")
+              case "ArrowDown": case "KeyS":  engine.current.dispatch("move-down")
                 break;
-              case "ArrowLeft": engine.current.dispatch("move-left")
+              case "ArrowLeft": case "KeyA":  engine.current.dispatch("move-left")
                 break;
-              case "ArrowRight": engine.current.dispatch("move-right")
+              case "ArrowRight": case "KeyD":  engine.current.dispatch("move-right")
                 break;
+                default: console.log(keyValue.code)
             }
           }} />
       )}

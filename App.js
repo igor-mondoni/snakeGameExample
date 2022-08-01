@@ -161,7 +161,6 @@ function App() {
                 break;
               case "ArrowRight": case "KeyD":  engine.current.dispatch("move-right")
                 break;
-                default: console.log(keyValue.code)
             }
           }} />
       )}

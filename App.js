@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { GameEngine } from "react-native-game-engine";
 import Constants from "./Constants";
 import Head from "./components/Head";
@@ -7,8 +7,13 @@ import Food from "./components/Food";
 import Tail from "./components/Tail";
 import GameLoop from "./systems/GameLoop";
 
+//Bootstrap Icons
+import HandIndexThumb from "react-native-bootstrap-icons/icons/hand-index-thumb";
+import Keyboard from "react-native-bootstrap-icons/icons/keyboard";
+
 function App() {
   const [isGameRunning, setIsGameRunning] = useState(true);
+  const [controlType, setControlType] = useState(Platform.OS === 'android' ? 'click' : (Platform.OS === 'android' ? 'click' : ''));
 
   const randomPositions = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -46,6 +51,7 @@ function App() {
       },
     });
     setIsGameRunning(true);
+    setControlType(Platform.OS === 'android' ? 'click' : (Platform.OS === 'android' ? 'click' : ''));
   };
 
   return (
@@ -93,33 +99,71 @@ function App() {
           }
         }}
       />
-      <View style={styles.controlContainer}>
-        <View style={styles.controllerRow}>
-          <TouchableOpacity onPress={() => engine.current.dispatch("move-up")}>
-            <View style={styles.controlBtn} />
-          </TouchableOpacity>
-        </View>
+      {controlType == "" ? (
         <View style={styles.controllerRow}>
           <TouchableOpacity
-            onPress={() => engine.current.dispatch("move-left")}
+            onPress={() => setControlType("click")}
           >
-            <View style={styles.controlBtn} />
+            <View style={styles.controlTypeBtn}>
+              <HandIndexThumb fill="rgb(189, 189, 189)" />
+            </View>
           </TouchableOpacity>
           <View style={[styles.controlBtn, { backgroundColor: null }]} />
           <TouchableOpacity
-            onPress={() => engine.current.dispatch("move-right")}
+            onPress={() => setControlType("keebord")}
           >
-            <View style={styles.controlBtn} />
+            <View style={styles.controlTypeBtn}>
+              <Keyboard fill="rgb(189, 189, 189)" />
+            </View>
           </TouchableOpacity>
         </View>
-        <View style={styles.controllerRow}>
-          <TouchableOpacity
-            onPress={() => engine.current.dispatch("move-down")}
-          >
-            <View style={styles.controlBtn} />
-          </TouchableOpacity>
+      ) : controlType == "click" ? (
+        <View style={styles.controlContainer}>
+          <View style={styles.controllerRow}>
+            <TouchableOpacity onPress={() => engine.current.dispatch("move-up")}>
+              <View style={styles.controlBtn} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.controllerRow}>
+            <TouchableOpacity
+              onPress={() => engine.current.dispatch("move-left")}
+            >
+              <View style={styles.controlBtn} />
+            </TouchableOpacity>
+            <View style={[styles.controlBtn, { backgroundColor: null }]} />
+            <TouchableOpacity
+              onPress={() => engine.current.dispatch("move-right")}
+            >
+              <View style={styles.controlBtn} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.controllerRow}>
+            <TouchableOpacity
+              onPress={() => engine.current.dispatch("move-down")}
+            >
+              <View style={styles.controlBtn} />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      ) : (
+        <TextInput
+          autoFocus
+          placeholder="clique aqui e use as setas do teclado"
+          value=""
+          style={styles.input}
+          onKeyPress={(keyValue) => {
+            switch (keyValue.code) {
+              case "ArrowUp": case "KeyW": engine.current.dispatch("move-up")
+                break;
+              case "ArrowDown": case "KeyS":  engine.current.dispatch("move-down")
+                break;
+              case "ArrowLeft": case "KeyA":  engine.current.dispatch("move-left")
+                break;
+              case "ArrowRight": case "KeyD":  engine.current.dispatch("move-right")
+                break;
+            }
+          }} />
+      )}
       {!isGameRunning && (
         <TouchableOpacity onPress={resetGame}>
           <Text
@@ -142,6 +186,7 @@ function App() {
 
 const styles = StyleSheet.create({
   canvas: {
+    paddingTop: 10,
     flex: 1,
     backgroundColor: "#000000",
     alignItems: "center",
@@ -159,6 +204,20 @@ const styles = StyleSheet.create({
     backgroundColor: "yellow",
     width: 100,
     height: 100,
+  },
+  controlTypeBtn: {
+    backgroundColor: "gray",
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  input: {
+    height: 40,
+    width: 250,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });
 
